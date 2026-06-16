@@ -1,5 +1,5 @@
 name: Checkmarx One Security Scan
- 
+
 on:
   push:
     branches: [main, master, develop]
