@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 """
-Checkmarx CI - Pre-flight Configuration Validator
-===================================================
-
 A standalone validator that runs BEFORE the main scan to catch
 configuration errors in seconds instead of after a 10-15 minute scan.
 
@@ -17,11 +14,6 @@ Checks performed:
 Exit codes:
   0 - All checks passed; safe to proceed with scan
   1 - One or more checks failed; do NOT run the scan
-
-Usage:
-  python validate_config.py                  # uses config.json + env vars
-  python validate_config.py --config X.json  # uses custom config
-  python validate_config.py --quiet          # only print failures
 
 Designed to be called standalone OR as a pre-step in CI.
 """
@@ -59,10 +51,7 @@ def fail(msg):
 def warn(msg):
     print(f"  {YELLOW}[WARN]{RESET}  {msg}")
 
-
-# ---------------------------------------------------------------------------
 # Config loading (same logic as main script for consistency)
-# ---------------------------------------------------------------------------
 
 def load_config(config_path):
     cfg = {}
@@ -94,10 +83,7 @@ def load_config(config_path):
         'email_to':      get('EMAIL_RECIPIENTS', 'email.recipients'),
     }
 
-
-# ---------------------------------------------------------------------------
 # Individual checks - each returns True (pass) or False (fail)
-# ---------------------------------------------------------------------------
 
 def check_required_fields(cfg):
     print("\n[1/6] Required configuration fields")
@@ -224,9 +210,7 @@ def check_source_path(cfg):
     return True
 
 
-# ---------------------------------------------------------------------------
 # Main
-# ---------------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(
