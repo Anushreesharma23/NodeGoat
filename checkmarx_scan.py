@@ -31,9 +31,7 @@ from email.mime.multipart import MIMEMultipart
 from email.utils import formataddr
 
 
-# ---------------------------------------------------------------------------
 # Configuration loading
-# ---------------------------------------------------------------------------
 
 def load_config(config_path=None):
     """
@@ -106,9 +104,7 @@ def validate_config(cfg):
         cfg['email_from'] = cfg['smtp_user']
 
 
-# ---------------------------------------------------------------------------
 # Step 1: Run Checkmarx scan via CLI
-# ---------------------------------------------------------------------------
 
 def run_scan(cfg):
     """
@@ -193,9 +189,7 @@ def run_scan(cfg):
     return report_file
 
 
-# ---------------------------------------------------------------------------
 # Step 2: Parse JSON report
-# ---------------------------------------------------------------------------
 
 def parse_report(report_file):
     """
@@ -293,9 +287,7 @@ def parse_report(report_file):
     return summary
 
 
-# ---------------------------------------------------------------------------
 # Step 3: Generate HTML email
-# ---------------------------------------------------------------------------
 
 def generate_html(summary, cfg):
     """Build a clean HTML email with severity color coding and a vuln table."""
@@ -388,9 +380,7 @@ def generate_html(summary, cfg):
 </body></html>"""
 
 
-# ---------------------------------------------------------------------------
 # Step 4: Send email
-# ---------------------------------------------------------------------------
 
 def send_email(summary, cfg):
     print("\n" + "="*70)
@@ -440,9 +430,7 @@ def send_email(summary, cfg):
         return False
 
 
-# ---------------------------------------------------------------------------
 # Step 5: Decide build outcome
-# ---------------------------------------------------------------------------
 
 def evaluate_threshold(summary, fail_on):
     """Return non-zero exit code if any 'fail_on' severity has findings."""
@@ -457,9 +445,7 @@ def evaluate_threshold(summary, fail_on):
     return 0
 
 
-# ---------------------------------------------------------------------------
 # Main
-# ---------------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(description='Checkmarx One CI integration')
