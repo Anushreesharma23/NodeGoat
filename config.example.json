@@ -6,7 +6,7 @@
     "tenant":       "cx-cs-na-pspoc",
     "apikey":       "<YOUR_CHECKMARX_API_KEY>",
     "project_name": "Vulnerable_CI_Pipeline",
-    "group":        "cxps-recruitment_Anushree-sharma",
+    "group":        "<YOUR_CHECKMARX_GROUP>",
     "branch":       "master",
     "scan_types":   "sast",
     "source":       "."
