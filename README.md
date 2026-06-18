@@ -1,162 +1,268 @@
-# NodeGoat
+# Checkmarx One CI/CD Security Automation
 
-Being lightweight, fast, and scalable, Node.js is becoming a widely adopted platform for developing web applications. This project provides an environment to learn how OWASP Top 10 security risks apply to web applications developed using Node.js and how to effectively address them.
+## Project Overview
 
-## Getting Started
+This project demonstrates the integration of Checkmarx One security scanning into a Continuous Integration (CI) pipeline using Python and GitHub Actions.
 
-OWASP Top 10 for Node.js web applications:
+The solution automatically performs source code security analysis, generates vulnerability reports, summarizes findings, and sends email notifications to stakeholders. It also includes a pre-flight validation utility to detect configuration issues before initiating scans.
 
-### Know it!
+---
 
-This application bundled a tutorial page that explains the OWASP Top 10 vulnerabilities and how to fix them.
+## Features
 
-Once the application is running, you can access the tutorial page at [http://localhost:4000/tutorial](http://localhost:4000/tutorial) (or the port you have configured).
+### Automated Security Scanning
 
-### Do it!
+* Integrates with Checkmarx One CLI (`cx`)
+* Performs SAST security scans on source code
+* Generates JSON vulnerability reports
 
-[A Vulnerable Node.js App for Ninjas](http://nodegoat.herokuapp.com/) to exploit, toast, and fix. You may like to [set up your own copy](#how-to-set-up-your-copy-of-nodegoat) of the app to fix and test vulnerabilities. Hint: Look for comments in the source code.
+### Pre-Flight Validation
 
-##### Default user accounts
+* Validates required configuration before scanning
+* Verifies Checkmarx authentication
+* Checks SMTP connectivity
+* Ensures source paths are accessible
+* Fails fast to save CI execution time
 
-The database comes pre-populated with these user accounts created as part of the seed data -
-* Admin Account - u:`admin` p:`Admin_123`
-* User Accounts (u:`user1` p:`User1_123`), (u:`user2` p:`User2_123`)
-* New users can also be added using the sign-up page.
+### Email Reporting
 
-## How to Set Up Your Copy of NodeGoat
+* Generates HTML security summaries
+* Reports findings by severity level
+* Highlights top vulnerabilities
+* Supports multiple recipients
 
-### OPTION 1 - Run NodeGoat on your machine
+### CI/CD Integration
 
-1) Install [Node.js](http://nodejs.org/) - NodeGoat requires Node v8 or above
+* GitHub Actions workflow included
+* Automated execution on push and manual trigger
+* Uploads scan reports as workflow artifacts
 
-2) Clone the github repository:
-   ```
-   git clone https://github.com/OWASP/NodeGoat.git
-   ```
+### Cross-Platform Support
 
-3) Go to the directory:
-   ```
-   cd NodeGoat
-   ```
+* Ubuntu
+* Windows
+* macOS
 
-4) Install node packages:
-   ```
-   npm install
-   ```
+---
 
-5) Set up MongoDB. You can either install MongoDB locally or create a remote instance:
+## Repository Structure
 
-   * Using local MongoDB:
-     1) Install [MongoDB Community Server](https://docs.mongodb.com/manual/administration/install-community/)
-     2) Start [mongod](http://docs.mongodb.org/manual/reference/program/mongod/#bin.mongod)
+```
+.
+├── checkmarx_scan.py
+├── validate_config.py
+├── requirements.txt
+├── config.example.json
+├── .gitignore
+├── ReadMe.txt
+└── .github/
+    └── workflows/
+        └── checkmarx-scan.yml
+```
 
-   * Using remote MongoDB instance:
-     1) [Deploy a MongoDB Atlas free tier cluster](https://docs.atlas.mongodb.com/tutorial/deploy-free-tier-cluster/) (M0 Sandbox)
-     2) [Enable network access](https://docs.atlas.mongodb.com/security/add-ip-address-to-list/) to the cluster from your current IP address
-     3) [Add a database user](https://docs.atlas.mongodb.com/tutorial/create-mongodb-user-for-cluster/) to the cluster
-     4) Set the `MONGODB_URI` environment variable to the connection string of your cluster, which can be viewed in the cluster's
-        [connect dialog](https://docs.atlas.mongodb.com/tutorial/connect-to-your-cluster/#connect-to-your-atlas-cluster). Select "Connect your application",
-        set the driver to "Node.js" and the version to "2.2.12 or later". This will give a connection string in the form:
-        ```
-        mongodb://<username>:<password>@<cluster>/<dbname>?ssl=true&replicaSet=<rsname>&authSource=admin&retryWrites=true&w=majority
-        ```
-        The `<username>` and `<password>` fields need filling in with the details of the database user added earlier. The `<dbname>` field sets the name of the
-        database nodegoat will use in the cluster (eg "nodegoat"). The other fields will already be filled in with the correct details for your cluster.
+---
 
-6) Populate MongoDB with the seed data required for the app:
-   ```
-   npm run db:seed
-   ```
-   By default this will use the "development" configuration, but the desired config can be passed as an argument if required.
+## Prerequisites
 
-7) Start the server. You can run the server using node or nodemon:
-   * Start the server with node. This starts the NodeGoat application at [http://localhost:4000/](http://localhost:4000/):
-     ```
-     npm start
-     ```
-   * Start the server with nodemon, which will automatically restart the application when you make any changes. This starts the NodeGoat application at [http://localhost:5000/](http://localhost:5000/):
-     ```
-     npm run dev
-     ```
+* Python 3.7+
+* Checkmarx One CLI (`cx`)
+* Checkmarx One Account
+* API Key
+* Tenant Name
+* SMTP Email Credentials
 
-#### Customizing the Default Application Configuration
+---
 
-By default the application will be hosted on port 4000 and will connect to a MongoDB instance at localhost:27017. To change this set the environment variables `PORT` and `MONGODB_URI`.
+## Installation
 
-Other settings can be changed by updating the [config file](https://github.com/OWASP/NodeGoat/blob/master/config/env/all.js).
+### Install Checkmarx CLI
 
-### OPTION 2 - Run NodeGoat on Docker
+Download and install the latest Checkmarx CLI from the official releases page.
 
-The repo includes the Dockerfile and docker-compose.yml necessary to set up the app and db instance, then connect them together.
+Verify installation:
 
-1) Install [docker](https://docs.docker.com/installation/) and [docker compose](https://docs.docker.com/compose/install/) 
+```bash
+cx version
+```
 
-2) Clone the github repository:
-   ```
-   git clone https://github.com/OWASP/NodeGoat.git
-   ```
+### Configure Settings
 
-3) Go to the directory:
-   ```
-   cd NodeGoat
-   ```
+Copy the sample configuration:
 
-4) Build the images:
-   ```
-   docker-compose build
-   ```
+```bash
+cp config.example.json config.json
+```
 
-5) Run the app, this starts the NodeGoat application at http://localhost:4000/:
-   ```
-   docker-compose up
-   ```
+Update the file with:
 
-### OPTION 3 - Deploy to Heroku
+* Checkmarx API Key
+* Tenant Name
+* SMTP Credentials
+* Recipient Emails
 
-This option uses a free ($0/month) Heroku node server.
+---
 
-Though not essential, it is recommended that you fork this repository and deploy the forked repo.
-This will allow you to fix vulnerabilities in your own forked version, then deploy and test it on Heroku.
+## Running Configuration Validation
 
-1) Set up a publicly accessible MongoDB instance:
-   1) [Deploy a MongoDB Atlas free tier cluster](https://docs.atlas.mongodb.com/tutorial/deploy-free-tier-cluster/) (M0 Sandbox)
-   2) [Enable network access](https://docs.atlas.mongodb.com/security/ip-access-list/#add-ip-access-list-entries) to the cluster from anywhere (CIDR range 0.0.0.0/0)
-   3) [Add a database user](https://docs.atlas.mongodb.com/tutorial/create-mongodb-user-for-cluster/) to the cluster
+Before starting a scan:
 
-2) Deploy NodeGoat to Heroku by clicking the button below:
+```bash
+python validate_config.py
+```
 
-   [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+The validator checks:
 
-   In the Create New App dialog, set the `MONGODB_URI` config var to the connection string of your MongoDB Atlas cluster.
-   This can be viewed in the cluster's [connect dialog](https://docs.atlas.mongodb.com/tutorial/connect-to-your-cluster/#connect-to-your-atlas-cluster).
-   Select "Connect your application", set the driver to "Node.js" and the version to "2.2.12 or later".
-   This will give a connection string in the form:
-   ```
-   mongodb://<username>:<password>@<cluster>/<dbname>?ssl=true&replicaSet=<rsname>&authSource=admin&retryWrites=true&w=majority
-   ```
-   The `<username>` and `<password>` fields need filling in with the details of the database user added earlier. The `<dbname>` field sets the name of the
-   database nodegoat will use in the cluster (eg "nodegoat"). The other fields will already be filled in with the correct details for your cluster.
+1. Required configuration values
+2. CLI availability
+3. Checkmarx authentication
+4. SMTP connectivity
+5. Email formatting
+6. Source path accessibility
 
-## Report bugs, Feedback, Comments
+---
 
-*  Open a new [issue](https://github.com/OWASP/NodeGoat/issues) or contact team by joining chat at [Slack](https://owasp.slack.com/messages/project-nodegoat/) or [![Join the chat at https://gitter.im/OWASP/NodeGoat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/OWASP/NodeGoat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+## Running a Security Scan
 
-## Contributing
+```bash
+python checkmarx_scan.py
+```
 
-Please Follow [the contributing guide](CONTRIBUTING.md)
+Optional parameters:
 
-## Code Of Conduct (CoC)
+```bash
+python checkmarx_scan.py --skip-email
+python checkmarx_scan.py --config custom.json
+```
 
-This project is bound by a [Code of Conduct](CODE_OF_CONDUCT.md).
+---
 
-## Contributors
+## GitHub Actions Setup
 
-Here are the amazing [contributors](https://github.com/OWASP/NodeGoat/graphs/contributors) to the NodeGoat project.
+Add the following repository secrets:
 
-## Supports
+| Secret           | Description          |
+| ---------------- | -------------------- |
+| CX_BASE_URI      | Checkmarx Server URL |
+| CX_TENANT        | Tenant Name          |
+| CX_APIKEY        | API Key              |
+| CX_GROUP         | Group Name           |
+| SMTP_SERVER      | SMTP Host            |
+| SMTP_PORT        | SMTP Port            |
+| SMTP_USER        | Email Username       |
+| SMTP_PASSWORD    | Email Password       |
+| EMAIL_RECIPIENTS | Recipient List       |
 
-- Thanks to JetBrains for providing licenses to fantastic [WebStorm IDE](https://www.jetbrains.com/webstorm/) to build this project.
+After configuration:
 
-## License
+1. Push code to GitHub
+2. Open Actions tab
+3. Run "Checkmarx One Security Scan"
 
-Code licensed under the [Apache License v2.0.](http://www.apache.org/licenses/LICENSE-2.0)
+---
+
+## Scan Workflow
+
+The pipeline performs the following steps:
+
+1. Checkout source code
+2. Install Python dependencies
+3. Install Checkmarx CLI
+4. Validate configuration
+5. Execute security scan
+6. Generate JSON report
+7. Analyze vulnerabilities
+8. Send email summary
+9. Upload report artifacts
+10. Fail build on Critical or High findings
+
+---
+
+## Build Failure Policy
+
+By default, the pipeline fails when:
+
+* Critical vulnerabilities are detected
+* High severity vulnerabilities are detected
+
+This behavior can be customized using:
+
+```text
+FAIL_ON_SEVERITY=critical,high
+```
+
+---
+
+## Email Summary
+
+The generated email contains:
+
+* Critical findings count
+* High findings count
+* Medium findings count
+* Low findings count
+* Informational findings count
+* Top detected vulnerability categories
+
+Example subject:
+
+```text
+[Checkmarx] Security Scan - C:2 H:5 M:12 L:8
+```
+
+---
+
+## Cross-Platform Execution
+
+The GitHub Actions workflow runs on:
+
+* Ubuntu
+* Windows
+* macOS
+
+To prevent duplicate notifications, only the Ubuntu job sends email while all operating systems execute the complete scan process.
+
+---
+
+## Troubleshooting
+
+### Checkmarx CLI Not Found
+
+```bash
+cx version
+```
+
+Ensure the CLI is installed and available in PATH.
+
+### Authentication Failure
+
+Verify:
+
+* CX_APIKEY
+* CX_TENANT
+* CX_BASE_URI
+
+### SMTP Authentication Error
+
+Use an App Password rather than your regular email password.
+
+### Missing Report File
+
+Verify that the configured output directory exists and is writable.
+
+---
+
+## Technologies Used
+
+* Python
+* Checkmarx One CLI
+* GitHub Actions
+* SMTP Email
+* JSON Reporting
+
+---
+
+## Author
+
+Anushree Sharma
+
+Security Automation Project using Checkmarx One CI/CD Integration.
