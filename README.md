@@ -4,7 +4,7 @@
 
 This project demonstrates the integration of Checkmarx One security scanning into a Continuous Integration (CI) pipeline using Python and GitHub Actions.
 
-The solution automatically performs source code security analysis, generates vulnerability reports, summarizes findings, and sends email notifications to stakeholders. It also includes a pre-flight validation utility to detect configuration issues before initiating scans.
+The solution automatically performs source code security analysis, generates vulnerability reports, summarizes findings, and sends email notifications to stakeholders whenever a commit happens on the repository. It also includes a pre-flight validation utility to detect configuration issues before initiating scans.
 
 ---
 
