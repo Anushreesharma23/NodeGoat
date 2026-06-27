@@ -261,6 +261,10 @@ Verify that the configured output directory exists and is writable.
 
 ---
 
+## Testing
+
+Fully tested through manual, unit, and funcitonal testing
+
 ## Author
 
 Anushree Sharma
